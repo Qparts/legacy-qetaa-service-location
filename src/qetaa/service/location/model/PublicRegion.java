@@ -1,17 +1,18 @@
 package qetaa.service.location.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-@Table(name="loc_city")
 @Entity
-public class PublicCity implements Serializable{
+@Table(name="loc_region")
+public class PublicRegion implements Serializable {
+
 	private static final long serialVersionUID = 1L;
 	@Id
 	@Column(name="id")
@@ -28,11 +29,9 @@ public class PublicCity implements Serializable{
 	private int mapZoom;
 	@Column(name="country_id")
 	private int countryId;
-	@Column(name="region_id")
-	private int regionId;
-	@JsonIgnore
-	@Column(name="customer_status")
-	private char customerStatus;
+	@Transient
+	private List<PublicCity> cities;
+	
 	
 	public int getId() {
 		return id;
@@ -76,11 +75,12 @@ public class PublicCity implements Serializable{
 	public void setCountryId(int countryId) {
 		this.countryId = countryId;
 	}
-	public int getRegionId() {
-		return regionId;
+	public List<PublicCity> getCities() {
+		return cities;
 	}
-	public void setRegionId(int regionId) {
-		this.regionId = regionId;
+	public void setCities(List<PublicCity> cities) {
+		this.cities = cities;
 	}
+	
 	
 }

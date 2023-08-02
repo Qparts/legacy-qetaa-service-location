@@ -1,17 +1,20 @@
 package qetaa.service.location.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-@Table(name="loc_city")
+@Table(name="loc_country")
 @Entity
-public class PublicCity implements Serializable{
+public class PublicCountry implements Serializable {
+
 	private static final long serialVersionUID = 1L;
 	@Id
 	@Column(name="id")
@@ -22,17 +25,21 @@ public class PublicCity implements Serializable{
 	private String nameAr;
 	@Column(name="latitude")
 	private double latitude;
-	@Column(name="longitude")
+	@Column(name="longitude")	
 	private double longitude;
 	@Column(name="map_zoom")
 	private int mapZoom;
-	@Column(name="country_id")
-	private int countryId;
-	@Column(name="region_id")
-	private int regionId;
+	@Column(name="country_code")
+	private String countryCode;
+	@Column(name="mobile_regex")
+	private String mobileRegex;
+	@Transient
+	private List<PublicRegion> regions;
 	@JsonIgnore
 	@Column(name="customer_status")
 	private char customerStatus;
+	
+	
 	
 	public int getId() {
 		return id;
@@ -45,12 +52,6 @@ public class PublicCity implements Serializable{
 	}
 	public void setName(String name) {
 		this.name = name;
-	}
-	public String getNameAr() {
-		return nameAr;
-	}
-	public void setNameAr(String nameAr) {
-		this.nameAr = nameAr;
 	}
 	public double getLatitude() {
 		return latitude;
@@ -70,17 +71,38 @@ public class PublicCity implements Serializable{
 	public void setMapZoom(int mapZoom) {
 		this.mapZoom = mapZoom;
 	}
-	public int getCountryId() {
-		return countryId;
+	public String getCountryCode() {
+		return countryCode;
 	}
-	public void setCountryId(int countryId) {
-		this.countryId = countryId;
+	public void setCountryCode(String countryCode) {
+		this.countryCode = countryCode;
 	}
-	public int getRegionId() {
-		return regionId;
+	public String getMobileRegex() {
+		return mobileRegex;
 	}
-	public void setRegionId(int regionId) {
-		this.regionId = regionId;
+	public void setMobileRegex(String mobileRegex) {
+		this.mobileRegex = mobileRegex;
 	}
+	public List<PublicRegion> getRegions() {
+		return regions;
+	}
+	public void setRegions(List<PublicRegion> regions) {
+		this.regions = regions;
+	}
+	public String getNameAr() {
+		return nameAr;
+	}
+	public void setNameAr(String nameAr) {
+		this.nameAr = nameAr;
+	}
+	public char getCustomerStatus() {
+		return customerStatus;
+	}
+	public void setCustomerStatus(char customerStatus) {
+		this.customerStatus = customerStatus;
+	}
+	
+	
+	
 	
 }

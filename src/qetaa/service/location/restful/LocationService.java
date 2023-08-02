@@ -19,10 +19,11 @@ import qetaa.service.location.filters.SecuredUser;
 import qetaa.service.location.filters.ValidApp;
 import qetaa.service.location.model.City;
 import qetaa.service.location.model.Country;
-import qetaa.service.location.model.PublicCity;
 import qetaa.service.location.model.Region;
 
 @Path("/")
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
 public class LocationService {
 	@EJB
 	private DAO dao;
@@ -66,25 +67,7 @@ public class LocationService {
 	}
 	
 	
-	@GET
-	@Path("find-city/name/{param}/country/{param2}")
-	@ValidApp
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response findCountryCityByName(@PathParam(value="param2") int countryId, @PathParam(value="param") String name) {
-		try {
-			String sql="select d from PublicCity d where lower(d.name) like :value0 "
-					+ " or lower(d.nameAr) like :value0 and d.countryId = :value1 and d.customerStatus = :value2";
-			System.out.println(sql);
-			List<PublicCity> cities = dao.getJPQLParams(PublicCity.class, sql, "%"+name.trim().toLowerCase()+"%", countryId, 'A');			
-			System.out.println(cities.size());
-			if(cities.isEmpty()) {
-				return Response.status(404).build();
-			}
-			return Response.status(200).entity(cities).build();
-		}catch(Exception ex) {
-			return Response.status(500).build();
-		}
-	}
+
 	
 	
 	
@@ -105,13 +88,13 @@ public class LocationService {
 			return Response.status(500).build();
 		}
 	}
+	
+	
 
 	
 	@GET
 	@Path("regions/country/{param}")
-	//@SecuredUser
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
+	@SecuredUser
 	public Response getCountryRegions(@PathParam(value="param") int countryId) {
 		try {
 			List<Region> regions = dao.getCondition(Region.class, "country.id", countryId);
@@ -119,7 +102,7 @@ public class LocationService {
 				List<City> cities = dao.getCondition(City.class, "region", region);
 				region.setCities(cities);
 			}
-			return Response.status(200).build();
+			return Response.status(200).entity(regions).build();
 		}catch(Exception ex) {
 			return Response.status(500).build();
 		}
@@ -149,6 +132,10 @@ public class LocationService {
 			return Response.status(500).build();
 		}
 	}
+	
+	
+	
+	
 	
 	
 	@GET
@@ -198,9 +185,7 @@ public class LocationService {
 	
 	@GET
 	@Path("all-cities")
-	@SecuredUser//only user can see this
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
+	@Secured
 	public Response getAllCitiesInternall(){
 		try{
 			List<City> list = dao.get(City.class);
